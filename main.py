@@ -1,93 +1,62 @@
+#!/usr/bin/env python
 
+
+import os
 import webapp2
+import jinja2
 
-import hashlib
+from google.appengine.ext import db
 
-
-mainForm = """
-
-<html>
-<head>
-<title>Cadastro</title>
-</head>
-
-<body>
-<h1>Cadastro</h1>
-<form method="post">
-    
-<label>
-Nome do usuario 
-<input type="text" name="login">
-</label>  
-<br>
-<br>
-    
-<label>
-E-mail 
-<input type="text" name="email">
-</label>
-<br>
-<br>
-    
-<label>
-Senha 
-<input type="text" name="password">
-</label>    
-<br>
-<br>
-
-<input type="submit" value="Cadastrar">
-
-</form>
-</body>
-</html>
-
-"""
+#Jinja2 Directory Configuration
+template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
+                               autoescape = True)
 
 
-responseForm = """
+#Default Handler
+class Handler(webapp2.RequestHandler):
+    def write(self, *a, **kw):
+        self.response.out.write(*a, **kw)
 
-<html>
+    def render_str(self, template, **params):
+        t = jinja_env.get_template(template)
+        return t.render(params)
 
-  <head>
+    def render(self, template, **kw):
+        self.write(self.render_str(template, **kw))
 
-    <title>BashWiki</title>
+class User(db.Model):
+  name = db.StringProperty( required = True)
+  age = db.IntegerProperty()
+  ra = db.IntegerProperty()
 
-  </head>
-
-  <body>
-
-    <p>%(password)s criptografado usando sha512: %(cypher)s</p>
-
-  </body>
-
-</html>
-
-"""
-
-
-
-class MainHandler(webapp2.RequestHandler):
+class MainHandler(Handler):
 
     def get(self):
+        users = db.GqlQuery('SELECT * FROM User')
+        self.render('index.html', users = users)        
 
-        self.response.out.write( mainForm )
 
     def post(self):
+        name = self.request.get('name')
+        age = self.request.get('age')
+        ra = self.request.get('ra')
 
-        password = self.request.get('password')
+        if name and age:
+            user = User(name = name, age = int(age), ra = int(ra)
+            user.put()
 
-        self.response.out.write( responseForm % 
+            self.redirect( '/' )
 
-            { 'password': password, 'cypher': hashlib.sha512( password ).hexdigest() } )
+        else:
+            self.response.out.write( 'Erro: Ocorreu um erro no cadastro do usuario!' )
 
+class CadastroHandler(Handler):
+    def get(self):
+        self.render('cadastro.html')
 
 
 app = webapp2.WSGIApplication([
-
-    ('/', MainHandler)
-
+    ('/', MainHandler),
+    ('/cadastro', CadastroHandler)
 ], debug=True)
-
-
-

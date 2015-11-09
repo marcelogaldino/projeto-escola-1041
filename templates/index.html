@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Projeto Escola</title>
+  </head>
+  <body>
+    <form method="get">
+      <table align="center" border=1> 
+<TR align="center"> 
+<TD> NOME </TD> 
+<TD> IDADE </TD>
+<TD> RA </TD>
+</TR> 
+
+<TR> 
+<TD> {% for user in users %}
+        {{ user.name }}
+        </br>
+    {% endfor %}</TD>
+<TD> {% for user in users %}
+        {{ user.age }} 
+        </br>
+    {% endfor %} </TD>
+<TD> {% for user in users %}
+        {{user.ra}}
+        </br>
+    {% endfor %} </TD>
+</TR>
+
+<TR> 
+<TD> {% for user in users %}
+        {{ user.name }}
+        </br>
+    {% endfor %}</TD>
+<TD> {% for user in users %}
+        {{ user.age }} 
+        </br>
+    {% endfor %} </TD>
+<TD> {% for user in users %}
+        {{user.ra}}
+        </br>
+    {% endfor %} </TD>
+</TR>
+</TABLE> 
+    
+    <p align="center">
+    <a href="/cadastro">Cadastro de alunos</a>
+    </p>  
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Projeto Escola</title>
+  </head>
+  <body>
+    <form method="post">
+        <label>
+		Digite seu nome:
+        	<input type="text" name="name">
+        </label></br>
+        <label>
+        	Digite sua idade:
+        	<input type="number" name="age">
+        </label></br>
+	<label>
+		Digite o RA:
+		<input type="number" ra="ra">
+	</label></br>
+		
+       
+	 </br><center><input type="submit">
+    </form>
+    </hr>
+    {% for user in users %}
+        {{ user.name }} - {{ user.age }} - {{user.ra}}
+        </br>
+    {% endfor %}  
+  </body>
+</html>
